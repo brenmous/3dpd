@@ -34,7 +34,7 @@ module bucket(
         bucket2d();
         translate([thickness,thickness,thickness])
         linear_extrude(height=width-thickness*2)
-        offset(delta=-1)
+        offset(delta=-thickness)
         fill()
         bucket2d();
     }
@@ -43,7 +43,7 @@ module bucket(
 //bucket();
 
 module bucket_flat_bottom(
-    height=30, width=60, thickness=2, depth=80, ditch=40,split=0.75,
+    height=30, width=60, thickness=2, depth=80, ditch=45,split=0.75,
     hook_width=15, hook_height=40, hook_thickness=5
 ) {
     translate([-depth/2+hook_thickness+thickness,hook_height,width])
@@ -73,9 +73,10 @@ module bucket_flat_bottom(
         linear_extrude(height=width)
         fill()
         bucket2d();
+        color("red")
         translate([thickness,thickness,thickness])
         linear_extrude(height=width-thickness*2)
-        offset(delta=-1)
+        offset(delta=-thickness)
         fill()
         bucket2d();
     }
