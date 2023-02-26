@@ -43,13 +43,13 @@ module bucket(
 //bucket();
 
 module bucket_flat_bottom(
-    height=30, width=60, thickness=2, depth=80, ditch=45,split=0.75,
-    hook_width=15, hook_height=40, hook_thickness=5
+    height=60, width=100, thickness=2, depth=140, ditch=45,split=0.75,
+    hook_width=20, hook_height=100, hook_thickness=5
 ) {
-    translate([-depth/2+hook_thickness+thickness,hook_height,width])
+    translate([-hook_thickness-thickness,hook_height,width])
     rotate([-90,0,0])
     bucket_hook(hook_width, hook_thickness, hook_height);
-    translate([-depth/2+hook_thickness+thickness,hook_height,hook_width])
+    translate([-hook_thickness-thickness,hook_height,hook_width])
     rotate([-90,0,0])
     bucket_hook(hook_width, hook_thickness, hook_height);
     module bucket2d() {
