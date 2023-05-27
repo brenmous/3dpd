@@ -3,7 +3,7 @@ $fn=100;
 or=27.71;
 ir=21.5;
 
-module soap_dish() {
+module soap_dish(hanging=true) {
     module half_ring() {
         difference() {
             circle(r=or);
@@ -40,8 +40,10 @@ module soap_dish() {
         }
     }
 
-    linear_extrude(height=5)
-    hanger();
+    if (hanging) {
+        linear_extrude(height=5)
+        hanger();
+    }
 
     module hollow_dish() {
         translate([0,0,5])
@@ -68,18 +70,46 @@ module soap_dish() {
 
     hollow_dish();
 
-    module halo() {
+    module halo(scaling=1.87) {
         difference() {
             translate([0,110,0])
-            cylinder(r=or*1.87,h=5);
-            color("red")
-            translate([-or*2,112,0])
-            cube([or*2*2, or*2, 7]);
+            cylinder(r=or*scaling,h=5);
+            translate([-dw*1.3/2,100,0])
+            cube([dw*1.3, 100, 7]);
         }
     }
 
-    halo();
+    module loop() {
+        ot = 25;
+        ol = 15;
+        it = 16.1;
+        il = 3.6;
+        module _loop() {
+            linear_extrude(height=20)
+            difference() {
+                difference() {
+                    offset(delta=1, chamfer=true)
+                    square([ot,ol]);
+                    translate([(ot-it)/2,(ol-il)/2])
+                    offset(r=1)
+                    square([it,il]);
+                }
+            translate([-1,-1])
+            square([ot+2,ol/2.7]);
+            }
+        }
+        translate([-ot/2,92.21,ol/2.7])
+        rotate([-90,0,0])
+        _loop();
+
+    }
+
+    if (hanging) {
+        halo();
+    } else {
+        halo(scaling=2.097);
+        loop();
+    }
 }
 
-soap_dish();
-
+soap_dish(false);
