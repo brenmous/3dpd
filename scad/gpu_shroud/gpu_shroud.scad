@@ -51,36 +51,30 @@ module prism() {
     }
 }
 
-module hollowed(left=false) {
+module hollowed() {
     difference() {
         prism();
-        if (left) {
-            translate([t,1,-1])
-            scale([0.98,1,1])
-            prism();
-        } else {
-            translate([t,1,-1])
-            scale([0.98,1,1])
-            prism();
-        }
+        translate([t,1,-1])
+        scale([0.98,1,1])
+        prism();
     }
 }
 
 
-module shroud(left=false) {
+module shroud() {
     difference() {
         union() {
-            hollowed(left);
+            hollowed();
             hull() {
                 intersection() {
-                    hollowed(left);
+                    hollowed();
                     cube([12,12,12]);
                 }
                 cube([12,12,1]);
             }
             hull() {
                 intersection() {
-                    hollowed(left);
+                    hollowed();
                     translate([w - 12, 0, 0])
                     cube([12,12,12]);
                 }
@@ -96,39 +90,52 @@ module shroud(left=false) {
 }
 
 module left_shroud() {
-    shroud(true);
+    shroud();
     translate([0,l - 1,0])
     cube([1.5, 9 + 1, h]);
 }
 
 
-difference() {
-    left_shroud();
-    color("red")
-    translate([w-10, l-3, h-3])
-    cube([10-t+.3, 3, 10]);
-}
-
-color("red")
-translate([w-10, l-3, h-3-1.5])
-cube([10, 3, 1.5]);
-
-color("red")
-translate([w-10, l-4.5, h-3-1.5])
-cube([10, 1.5, 3]);
-
-hull() {
-    intersection() {
+module hergh() {
+    difference() {
         left_shroud();
         color("red")
-        translate([w-10-1.5, l-4.5, h-3-1.5])
-        cube([1.5, 4.5, 5]);
+        translate([w-10, l-3, h-3])
+        cube([10-t+.3, 3, 10]);
     }
 
-    color("blue")
-    translate([w-10-1.5, l-4.5, h-3-1.5])
-    cube([1.5, 4.5, 1.5]);
+    color("red")
+    translate([w-10, l-3, h-3-1.5])
+    cube([10, 3, 1.5]);
+
+    color("red")
+    translate([w-10, l-4.5, h-3-1.5])
+    cube([10, 1.5, 3]);
+
+
+
+    hull() {
+        intersection() {
+            left_shroud();
+            color("red")
+            translate([w-10-1.5, l-4.5, h-3-1.5])
+            cube([1.5, 4.5, 5]);
+        }
+
+        color("blue")
+        translate([w-10-1.5, l-4.5, h-3-1.5])
+        cube([1.5, 4.5, 1.5]);
+    }
 }
+
+translate([-1,0,0])
+intersection() {
+    hergh();
+    color("blue")
+    translate([w-1.3, l-4.5, h-3-1.5])
+    cube([1.4, 6, 6]);
+}
+hergh();
 
 
 //l = 45;
@@ -145,7 +152,7 @@ _hyp = sqrt(pow(_ll, 2) + pow(_hh, 2));
 module _right_shroud() {
     difference() {
         union() {
-            shroud(false);
+            shroud();
             translate([w-t+.24,l - 1,0])
             cube([t-.24, 9+1, h+1]);
         }
