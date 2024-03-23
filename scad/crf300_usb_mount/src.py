@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from solid import cylinder, scad_render_to_file, hole, cube, rotate, translate, hull, sphere, mirror, square
+from solid import cylinder, scad_render_to_file, hole, cube, rotate, translate, hull, sphere, mirror, square, intersection
 from solid.utils import left, right, forward, back, up, down, BACK_VEC, FORWARD_VEC, fillet_2d
 
 
@@ -48,19 +48,6 @@ class Spine:
     def _obj(self):
         return cube([self.width, self.thick, self.height])
 
-    def chamfer(self, obj):
-        return (
-            self._obj() - (
-                # top short edge
-                forward(self.thick/2)(rotate(45, [-1, 0, 0])(self._obj())) +
-                # bottom short edge
-                forward(self.thick)(up(self.height - self.thick/2)(
-                    rotate(45, [1, 0, 0])(self._obj()))
-                )
-                # left (facing y+) long edge
-            )
-        )
-
     def pos(self, obj):
         return down(self.height - self.um_thick)(forward(self.um_length)(left(self.width/2)(obj)))
 
@@ -81,19 +68,6 @@ class SpineConnector:
 
     def _obj(self):
         return cube([self.width, self.thick, self.um_thick])
-
-    def chamfer(self, obj):
-        return (
-            self._obj() - (
-                # top short edge
-                forward(self.thick/2)(rotate(45, [-1, 0, 0])(self._obj())) +
-                # bottom short edge
-                forward(self.thick)(up(self.height - self.thick/2)(
-                    rotate(45, [1, 0, 0])(self._obj()))
-                )
-                # left (facing y+) long edge
-            )
-        )
 
     def pos(self, obj):
         return down(self.height - self.um_thick)(forward(self.um_length)(left(self.width/2)(obj)))
@@ -131,14 +105,28 @@ spine = Spine(width=ring.outerd/2, um_length=um.length, um_thick=um.thick)
 spine_connector = SpineConnector(width=ring.outerd/2, um_length=um.length, um_thick=um.thick)
 lb = LowerBody(width=ring.outerd/2, spine_height=spine.height, spine_thick=spine.thick)
 
-render = [
+main = sum([
     ring.obj(),
     hull()(
         um.obj(),
-        spine_connector.obj(),
+        hull()(
+            spine_connector.obj(),
+        )
     ),
     spine.obj(),
     lb.obj()
-]
+])
 
-scad_render_to_file(sum(render), 'test.scad', file_header='$fn = 128;')
+# beef up the spine connector with a chamfer underneath
+beef = hull()(
+    intersection()(left(ring.outerd/2)(forward(um.length)((cube([ring.outerd, spine_connector.thick, um.thick])))), main),
+    down(spine_connector.height)(spine_connector.obj())
+)
+
+# add chamfers to the bottom joint
+# annnnd here is where I give up on trying to be neat
+chamfer_box = forward(24)(left(9)(down(70)(rotate(45, [1,0,0])(cube([18,10,10])))))
+chamfer_box2 = forward(34)(left(9)(down(77.1)(rotate(45, [1,0,0])(cube([30,10,10])))))
+
+
+scad_render_to_file((main + beef + chamfer_box) - chamfer_box2, 'test.scad', file_header='$fn = 128;')
