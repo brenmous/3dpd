@@ -78,7 +78,7 @@ class SpineConnector:
 
 @dataclass
 class LowerBody:
-    length: int = 30
+    length: int = 38
     width: int = 34
     thick: int = 10
     spine_height: int = 70
@@ -89,12 +89,12 @@ class LowerBody:
     def _obj(self):
         return (
             cube([self.width, self.length + self.spine_thick, self.thick]) -
-            forward(self.hole_offset)(right(self.width/2)(cylinder(r=2.5, h=self.thick)))
+            forward(self.hole_offset)(right(self.width/2)(cylinder(r=3, h=self.thick)))
         )
 
     def pos(self, obj):
         # fucked up here, eyeball it
-        return back(10)(left(self.width/2)(down(self.spine_height)(obj)))
+        return back(18)(left(self.width/2)(down(self.spine_height)(obj)))
 
     def obj(self):
         return self.pos(self._obj())
