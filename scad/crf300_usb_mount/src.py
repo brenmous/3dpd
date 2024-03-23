@@ -22,7 +22,7 @@ class Ring:
 
 @dataclass
 class UpperBody:
-    clearance: int = 6
+    clearance: int = 2
     thick: int = 10
     width: int = 34
 
@@ -78,7 +78,7 @@ class SpineConnector:
 
 @dataclass
 class LowerBody:
-    length: int = 55
+    length: int = 30
     width: int = 34
     thick: int = 10
     spine_height: int = 70
@@ -93,7 +93,8 @@ class LowerBody:
         )
 
     def pos(self, obj):
-        return back(31)(left(self.width/2)(down(self.spine_height)(obj)))
+        # fucked up here, eyeball it
+        return back(10)(left(self.width/2)(down(self.spine_height)(obj)))
 
     def obj(self):
         return self.pos(self._obj())
@@ -125,8 +126,8 @@ beef = hull()(
 
 # add chamfers to the bottom joint
 # annnnd here is where I give up on trying to be neat
-chamfer_box = forward(24)(left(9)(down(70)(rotate(45, [1,0,0])(cube([18,10,10])))))
-chamfer_box2 = forward(34)(left(9)(down(77.1)(rotate(45, [1,0,0])(cube([30,10,10])))))
+chamfer_box = forward(20)(left(9)(down(70)(rotate(45, [1,0,0])(cube([18,10,10])))))
+chamfer_box2 = forward(30)(left(9)(down(77.1)(rotate(45, [1,0,0])(cube([30,10,10])))))
 
 
 scad_render_to_file((main + beef + chamfer_box) - chamfer_box2, 'test.scad', file_header='$fn = 128;')
