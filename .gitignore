@@ -1,5 +1,9 @@
 gcode/
 stls/
+logs/
 *.gcode
 *.3mf
-*.log
+*.log*
+*.png
+*.db
+printer-*_*.cfg
