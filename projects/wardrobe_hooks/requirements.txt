@@ -1,0 +1,3 @@
+CQ-editor @ git+https://github.com/jdegenstein/jmwright-CQ-Editor
+cadquery>=2.2
+build123d @ git+https://github.com/gumyr/build123d
