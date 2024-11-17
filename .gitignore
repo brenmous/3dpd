@@ -6,4 +6,5 @@ logs/
 *.log*
 *.png
 *.db
+*.FCBak
 printer-*_*.cfg
