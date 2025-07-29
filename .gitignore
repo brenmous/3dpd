@@ -2,6 +2,7 @@ bedtextures/
 gcode/
 stls/
 logs/
+external/
 *.gcode
 *.3mf
 *.log*
